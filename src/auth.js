@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+import { addUserToFirestore } from "./firestore";
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
@@ -13,6 +14,8 @@ export async function signInUser() {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
+    addUserToFirestore(user);
+    // console.log(user);
     return { success: true, user };
   } catch (error) {
     console.log(error);
@@ -31,5 +34,5 @@ export async function signOutUser() {
 }
 
 export function onAuthStateChange(callback) {
-  onAuthStateChanged(auth, callback);
+  return onAuthStateChanged(auth, callback);
 }
